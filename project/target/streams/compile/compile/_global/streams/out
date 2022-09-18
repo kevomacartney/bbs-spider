@@ -1,0 +1,4 @@
+[error] /Users/kelvinmacartney/Projects/bbs-spider/project/Dependencies.scala:12:20: unclosed quoted identifier
+[error]     val `fs2-io` = `"co.fs2" %% "fs2-io" % version
+[error]                    ^
+[error] one error found

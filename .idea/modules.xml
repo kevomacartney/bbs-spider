@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app.iml" group="app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jjwxc.iml" filepath="$PROJECT_DIR$/.idea/modules/jjwxc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jjwxc-build.iml" filepath="$PROJECT_DIR$/.idea/modules/jjwxc-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stream.iml" filepath="$PROJECT_DIR$/.idea/modules/stream.iml" group="app" />
+    </modules>
+  </component>
+</project>
