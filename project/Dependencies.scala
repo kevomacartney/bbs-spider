@@ -1,3 +1,4 @@
+import sbt.Keys.libraryDependencies
 import sbt._
 
 object Dependencies {
@@ -22,8 +23,10 @@ object Dependencies {
     val `circe-fs2`     = "io.circe" %% "circe-fs2"     % "0.14.0"
   }
   object Cats {
-    val cats          = "org.typelevel" %% "cats-core"   % "2.8.0"
-    val `cats-effect` = "org.typelevel" %% "cats-effect" % "3.3.14"
+    val cats                    = "org.typelevel" %% "cats-core"              % "2.8.0"
+    val `cats-effect`           = "org.typelevel" %% "cats-effect"            % "3.3.14"
+    val `cats-effect-concurrent` = "org.typelevel" %% "cats-effect-concurrent" % "3.0-8096649"
+
   }
 
   object Logging {
@@ -36,9 +39,26 @@ object Dependencies {
     val `scala-url-builder` = "org.f100ded.scala-url-builder" %% "scala-url-builder" % "0.9.1"
     val `scala-swing-ui`    = "org.scala-lang.modules"        %% "scala-swing"       % "3.0.0"
     val `nscala-time`       = "com.github.nscala-time"        %% "nscala-time"       % "2.32.0"
+    val `joda-time`         = "joda-time"                     % "joda-time"          % "2.12.2"
   }
 
   object Config {
     val `pure-config` = "com.github.pureconfig" %% "pureconfig" % "0.17.1"
   }
+
+  lazy val `fs2-File` = Seq(
+    libraryDependencies ++= List(
+      Circe.`circe-fs2`,
+      Circe.`circe-parser`,
+      Circe.`circe-generic`,
+      Fs2.`fs2-io`
+    )
+  )
+
+  lazy val selenium = Seq(
+    libraryDependencies ++= List(
+      Browser.`selenium-java`,
+      Browser.webdrivermanager
+    )
+  )
 }

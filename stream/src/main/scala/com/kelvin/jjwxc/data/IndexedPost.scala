@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports._
 
 import java.util.UUID
 
-case class IndexedPage(
+case class IndexedPost(
     id: UUID,
     category: String,
     postTopic: String,

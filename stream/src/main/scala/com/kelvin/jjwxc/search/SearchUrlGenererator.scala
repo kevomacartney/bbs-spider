@@ -4,8 +4,8 @@ import fs2._
 
 import java.net.{URL, URLEncoder}
 
-class SearchUrlService(hostUrl: String, encoding: String) {
-  def urlStream: Pipe[IO, SearchTerm, URL] = _.map { searchTerm =>
+class SearchUrlGenererator(hostUrl: String, encoding: String) {
+  def stream: Pipe[IO, SearchTerm, URL] = _.map { searchTerm =>
     val urlEncodeSearchTerm = urlEncode(searchTerm.searchTerm)
     val board               = searchTerm.section
 
@@ -15,9 +15,9 @@ class SearchUrlService(hostUrl: String, encoding: String) {
   def urlEncode(searchTerm: String): String = URLEncoder.encode(searchTerm, encoding)
 }
 
-object SearchUrlService {
-  def resource(hostUrl: String, encoding: String): Resource[IO, SearchUrlService] = {
-    val acquire = IO(new SearchUrlService(hostUrl, encoding))
+object SearchUrlGenererator {
+  def resource(hostUrl: String, encoding: String): Resource[IO, SearchUrlGenererator] = {
+    val acquire = IO(new SearchUrlGenererator(hostUrl, encoding))
     Resource.eval(acquire)
   }
 }

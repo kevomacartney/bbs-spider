@@ -3,6 +3,5 @@ import cats.effect.IO
 import fs2.{Pipe, Stream}
 
 object SearchTermStream {
-
-  def searchTermsStream: Pipe[IO, (String, String), SearchTerm] = _.map(tuple => SearchTerm(tuple._1, tuple._2))
+  def stream: Pipe[IO, (String, String), SearchTerm] = _.map(tuple => SearchTerm(section = tuple._1, searchTerm = tuple._2))
 }
