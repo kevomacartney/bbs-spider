@@ -5,8 +5,8 @@ object Dependencies {
   lazy val overrides = Seq(
     )
   object Browser {
-    var `selenium-java`  = "org.seleniumhq.selenium" % "selenium-java"    % "4.4.0"
-    var webdrivermanager = "io.github.bonigarcia"    % "webdrivermanager" % "5.2.3"
+    var `selenium-java`  = "org.seleniumhq.selenium" % "selenium-java"    % "4.8.1"
+    var webdrivermanager = "io.github.bonigarcia"    % "webdrivermanager" % "5.3.2"
   }
 
   object Fs2 {
@@ -23,9 +23,10 @@ object Dependencies {
     val `circe-fs2`     = "io.circe" %% "circe-fs2"     % "0.14.0"
   }
   object Cats {
-    val cats                    = "org.typelevel" %% "cats-core"              % "2.8.0"
-    val `cats-effect`           = "org.typelevel" %% "cats-effect"            % "3.3.14"
-    val `cats-effect-concurrent` = "org.typelevel" %% "cats-effect-concurrent" % "3.0-8096649"
+    val cats                     = "org.typelevel"    %% "cats-core"              % "2.8.0"
+    val `cats-effect`            = "org.typelevel"    %% "cats-effect"            % "3.3.14"
+    val `cats-effect-concurrent` = "org.typelevel"    %% "cats-effect-concurrent" % "3.0-8096649"
+    val `cats-retry`             = "com.github.cb372" %% "cats-retry"             % "3.1.0"
 
   }
 
@@ -40,6 +41,7 @@ object Dependencies {
     val `scala-swing-ui`    = "org.scala-lang.modules"        %% "scala-swing"       % "3.0.0"
     val `nscala-time`       = "com.github.nscala-time"        %% "nscala-time"       % "2.32.0"
     val `joda-time`         = "joda-time"                     % "joda-time"          % "2.12.2"
+    val `spowio-excel`      = "com.norbitltd"                 %% "spoiwo"            % "2.2.1"
   }
 
   object Config {

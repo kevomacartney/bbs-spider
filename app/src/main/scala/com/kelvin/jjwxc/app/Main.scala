@@ -2,9 +2,12 @@ package com.kelvin.jjwxc.app
 
 import cats.effect.{ExitCode, IO, IOApp}
 import com.kelvin.jjwxc.config.ApplicationConfig
+import com.kelvin.jjwxc.model.SearchTerm
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import pureconfig._
 import pureconfig.generic.auto._
+
+import scala.util.matching.Regex
 
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
@@ -16,29 +19,34 @@ object Main extends IOApp {
       config      <- loadConfig
       exitCode    <- Application.run(searchTerms, config)(logger)
 
-      _ <- logger.info(s"jjwxc indexing completed, saved to ${config.jjwxcConfig.saveDirectory}")
+      _ <- logger.info(s"jjwxc indexing completed")
     } yield exitCode
   }
 
-  def parseSearchTerms(searchTerms: List[String]): IO[List[(String, String)]] = {
-    val subsectionRegex  = ".*(?=:)".r
-    val searchTermsRegex = "[^:]+$".r
+  def parseSearchTerms(searchTerms: List[String]): IO[List[SearchTerm]] = {
+    val subsectionRegex  = "^([^:]+)".r
+    val searchTermsRegex = ":([^:]+)$".r
+    val searchTopic      = ":([^:]+):".r
+
+    def extractTerm(regex: Regex, term: String) = {
+      regex.findFirstMatchIn(term) match {
+        case Some(value) => value.group(1)
+        case None        => throw new Exception(s"'$term' is not a valid search topic")
+      }
+    }
 
     IO {
       searchTerms.flatMap { arg =>
-        val subSection = subsectionRegex
-          .findFirstMatchIn(arg)
-          .getOrElse(throw new Exception(s"'$arg' is not a valid search criteria"))
-          .toString()
+        val subSection = extractTerm(subsectionRegex, arg)
 
-        val searchTerms = searchTermsRegex
-          .findFirstMatchIn(arg)
-          .getOrElse(throw new Exception(s"'$arg' is not a valid search criteria"))
-          .toString()
+        val searchTerms = extractTerm(searchTermsRegex, arg)
           .split(",")
-          .toList
+          .map(_.trim)
+          .filter(_.nonEmpty)
 
-        searchTerms.map(searchTerm => subSection -> searchTerm)
+        val topic = extractTerm(searchTopic, arg)
+
+        searchTerms.map(searchTerm => SearchTerm(section = subSection, searchTopic = topic, searchTerm = searchTerm))
       }
     }
   }
