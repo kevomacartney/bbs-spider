@@ -1,7 +1,7 @@
-import sbt._
+import sbt.*
 import sbt.Keys.resolvers
-import Dependencies._
-import Resolvers._
+import Dependencies.*
+import Resolvers.*
 
 lazy val assemblySettings = Seq(
   assembleArtifact := true,
@@ -24,6 +24,7 @@ lazy val commonSettings = Seq(
     Cats.`cats-retry`,
     Logging.`log4cats`,
     Logging.`log4cats-slf4j`,
+    Logging.`log4j-core`,
     Logging.logBack,
     Misc.`scala-url-builder`,
     Misc.`scala-swing-ui`,

@@ -1,6 +1,7 @@
 package com.kelvin.jjwxc.app
 
 import cats.effect.{ExitCode, IO, Resource}
+import com.kelvin.jjwxc.{Commands, Compile}
 import com.kelvin.jjwxc.cache.IndexedPostCachingStream
 import com.kelvin.jjwxc.config.ApplicationConfig
 import com.kelvin.jjwxc.driver.DriverFactory
@@ -8,18 +9,20 @@ import com.kelvin.jjwxc.model.SearchTerm
 import com.kelvin.jjwxc.orchestration.{DriverInstancePool, OrchestrationService, SinkStream}
 import com.kelvin.jjwxc.requests.SearchTermRequester
 import com.kelvin.jjwxc.search.SearchUrlGenererator
-import io.github.bonigarcia.wdm.WebDriverManager
 import org.typelevel.log4cats.Logger
 
 import java.io.File
 
 object Application {
-  def run(searchTerms: List[SearchTerm], config: ApplicationConfig)(implicit logger: Logger[IO]): IO[ExitCode] = {
+  def run(searchTerms: List[SearchTerm], config: ApplicationConfig, command: String)(
+      implicit logger: Logger[IO]
+  ): IO[ExitCode] = {
 
     val chromeWithTokenResource = for {
       _ <- Resource.eval(logger.info("Initialising Driver"))
 
       workingDir = jarDirectory()
+      _          <- Resource.eval(logger.info(s"Working directory [$workingDir]"))
       cacheDir   = s"$workingDir/cache"
       sinkDir    = s"$workingDir/sink"
       loginUrl   = config.jjwxcConfig.loginUrl
@@ -41,7 +44,8 @@ object Application {
                                indexedPostCacheStream,
                                cachedPosts,
                                sink,
-                               threadCount
+                               threadCount,
+                               toCommands(command)
                              )
     } yield orchestrationService
 
@@ -70,5 +74,12 @@ object Application {
     val jarFile    = new File(codeSource.getLocation.toURI.getPath)
 
     jarFile.getParentFile.getPath
+  }
+
+  private def toCommands(command: String): Option[Commands] = {
+    command.toLowerCase() match {
+      case "compile" => Some(Compile)
+      case _         => None
+    }
   }
 }

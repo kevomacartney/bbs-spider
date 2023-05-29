@@ -16,7 +16,7 @@ import java.io.File
 case class ExcelEntry(post: Row, comments: List[Row])
 
 class SinkStream(cachePath: String, outputPath: String)(implicit val logger: Logger[IO]) {
-  def stream: Pipe[IO, IndexedPost, Unit] = _.flatMap { _ =>
+  def stream: Stream[IO, Unit] = {
     val fileName    = "posts.xlsx"
     val cachedFiles = getCachedFileNames
 

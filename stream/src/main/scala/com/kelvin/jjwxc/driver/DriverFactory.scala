@@ -11,35 +11,61 @@ import fs2._
 import fs2.io.file.{Files, Path}
 import org.joda.time.DateTime
 import org.openqa.selenium.Cookie
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
+import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.typelevel.log4cats.Logger
 
+import java.util
 import java.io.File
+import scala.jdk.CollectionConverters._
 
 object DriverFactory {
   def newDriver(hostUrl: String, loginUrl: String, workingDirectory: String)(
       implicit logger: Logger[IO]
   ): Resource[IO, DriverWithToken] = {
     for {
-      _ <- Resource.eval(logger.info("Initialising Chrome Driver"))
+      _ <- Resource.eval(logger.info("Initialising Driver"))
       _ <- Resource.eval(IO(WebDriverManager.firefoxdriver().setup()))
 
-      token        <- loadOrCreateToken(loginUrl, workingDirectory)
-      chromeDriver <- initialiseDriverDriver()
+      token  <- loadOrCreateToken(loginUrl, workingDirectory)
+      driver <- initialiseDriverDriver()
 
-      _               <- Resource.eval(IO(chromeDriver.get(hostUrl)))
-      _               <- Resource.eval(injectTokenToChrome(chromeDriver, token))
-      chromeWithToken = DriverWithToken(token = token, driver = chromeDriver)
+      _               <- Resource.eval(IO(driver.get(hostUrl)))
+      _               <- Resource.eval(injectTokenToChrome(driver, token))
+      driverWithToken = DriverWithToken(token = token, driver = driver)
 
-    } yield chromeWithToken
+    } yield driverWithToken
+  }
+
+  def createChromeOptions: ChromeOptions = {
+    val options: util.List[String] = List(
+      //      "--headless",
+      "--disable-gpu",
+      "--window-size=1920,1200",
+      "--ignore-certificate-errors",
+      "--disable-extensions",
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+      "--remote-allow-origins=*"
+    ).asJava
+
+    new ChromeOptions().addArguments(options)
+  }
+
+  private def createFirefoxOptions: FirefoxOptions = {
+    val options: util.List[String] = List(
+      "--window-size=1920,1200"
+    ).asJava
+
+    new FirefoxOptions().addArguments(options)
   }
 
   private def initialiseDriverDriver()(implicit logger: Logger[IO]): Resource[IO, RemoteWebDriver] = {
     for {
       _      <- Resource.eval(logger.info("Starting Driver"))
-      driver <- Resource.make(IO(new FirefoxDriver()))((driver: RemoteWebDriver) => IO(driver.close()))
+      driver <- Resource.make(IO(new FirefoxDriver(createFirefoxOptions)))((d: RemoteWebDriver) => IO(d.close()))
+//      driver <- Resource.make(IO(new ChromeDriver(createOptions)))((driver: RemoteWebDriver) => IO(driver.close()))
     } yield driver
   }
 
