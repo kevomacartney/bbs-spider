@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <configuration>
-    <jmxConfigurator />
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
@@ -27,7 +26,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.eg.martech.incentives.collection" level="INFO"/>
+    <logger name="com.kelvin" level="INFO"/>
 
     <root level="${LOGBACK_ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="CONSOLE"/>

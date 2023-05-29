@@ -1,12 +1,12 @@
 import sbt.Keys.libraryDependencies
-import sbt._
+import sbt.*
 
 object Dependencies {
-  lazy val overrides = Seq(
+  lazy val overrides: Seq[Nothing] = Seq(
     )
   object Browser {
-    var `selenium-java`  = "org.seleniumhq.selenium" % "selenium-java"    % "4.8.1"
-    var webdrivermanager = "io.github.bonigarcia"    % "webdrivermanager" % "5.3.2"
+    var `selenium-java`  = "org.seleniumhq.selenium" % "selenium-java"    % "4.9.1"
+    var webdrivermanager = "io.github.bonigarcia"    % "webdrivermanager" % "5.3.3"
   }
 
   object Fs2 {
@@ -31,9 +31,10 @@ object Dependencies {
   }
 
   object Logging {
-    val `log4cats`       = "org.typelevel"  %% "log4cats-slf4j" % "2.4.0"
-    val `log4cats-slf4j` = "org.typelevel"  %% "log4cats-slf4j" % "2.4.0"
-    lazy val logBack     = "ch.qos.logback" % "logback-classic" % "1.2.5"
+    val `log4cats`        = "org.typelevel"            %% "log4cats-slf4j" % "2.5.0"
+    val `log4cats-slf4j`  = "org.typelevel"            %% "log4cats-slf4j" % "2.5.0"
+    lazy val logBack      = "ch.qos.logback"           % "logback-classic" % "1.4.6"
+    lazy val `log4j-core` = "org.apache.logging.log4j" % "log4j-core"      % "2.20.0"
   }
 
   object Misc {

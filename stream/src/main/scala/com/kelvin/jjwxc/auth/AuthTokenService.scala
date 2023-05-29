@@ -1,12 +1,12 @@
 package com.kelvin.jjwxc.auth
 
 import cats.effect.{IO, Resource}
+import com.kelvin.jjwxc.driver.DriverFactory
 import io.circe.generic.auto._
 import io.circe.syntax._
 import fs2._
 import fs2.io.file._
 import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.openqa.selenium.{Cookie, WebDriver}
@@ -26,7 +26,7 @@ object AuthTokenService {
   }
 
   private def makeDriver(): Resource[IO, RemoteWebDriver] = {
-    val acquire = IO(new ChromeDriver())
+    val acquire = IO(new ChromeDriver(DriverFactory.createChromeOptions))
     val release = (driver: RemoteWebDriver) => IO(driver.quit())
 
     Resource.make(acquire)(release)

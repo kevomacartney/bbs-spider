@@ -1,5 +1,6 @@
 package com.kelvin.jjwxc.search
 import cats.effect.{IO, Resource}
+import com.kelvin.jjwxc.Commands
 import com.kelvin.jjwxc.model.{GeneratedUrlContext, SearchTerm}
 import fs2._
 
