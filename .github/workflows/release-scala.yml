@@ -27,23 +27,18 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: 'sbt'
+
       - name: Run tests
         run: sbt test
-      - name: Build
+
+      - name: Build Jar
         run: sbt assembly
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Bbs-Spider ${{ github.ref }}
-          draft: false
-          prerelease: false
 
       - name: Upload JAR
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/scala-2.13/jjwc-spider.jar
-          asset_name: jjwc-spider.jar
-          asset_content_type: application/java-archive
+          files: ./target/scala-2.13/jjwc-spider.jar
+          body: Release notes for version ${{ github.ref }}
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
