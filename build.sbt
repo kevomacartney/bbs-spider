@@ -30,7 +30,8 @@ lazy val commonSettings = Seq(
     Misc.`scala-swing-ui`,
     Misc.`joda-time`,
     Fs2.fs2,
-    Misc.`spowio-excel`
+    Misc.`spowio-excel`,
+    Config.`pure-config`
   ),
   ThisBuild / scalaVersion := "2.13.8",
   dependencyOverrides ++= Dependencies.overrides,
@@ -62,8 +63,7 @@ lazy val `app` = (project in file("./app"))
     name := "app",
     Test / fork := true,
     libraryDependencies ++= List(
-      Config.`pure-config`
-    )
+      )
   )
 
 lazy val `stream` = (project in file("./stream"))

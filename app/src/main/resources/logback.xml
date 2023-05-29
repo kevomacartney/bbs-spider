@@ -30,7 +30,6 @@
 
     <root level="${LOGBACK_ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="StdoutFile"/>
     </root>
 
 </configuration>

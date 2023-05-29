@@ -32,7 +32,7 @@ object Application {
       searchUrlService           <- SearchUrlGenererator.resource(config.jjwxcConfig.hostUrl, config.jjwxcConfig.urlEncoding)
       searchChromeRequestService <- SearchTermRequester(driverWithToken.driver)
       indexedPostCacheStream     <- Resource.Eval(IO(IndexedPostCachingStream(cacheDir)))
-      threadCount                = 1 //Runtime.getRuntime.availableProcessors
+      threadCount                = Runtime.getRuntime.availableProcessors
       chromePool                 <- DriverInstancePool(threadCount, hostUrl, workingDir)
       cachedPosts                <- Resource.eval(IO(loadCachedPosts(cacheDir)))
       sink                       <- Resource.eval(IO(new SinkStream(cachePath = cacheDir, outputPath = sinkDir)))
