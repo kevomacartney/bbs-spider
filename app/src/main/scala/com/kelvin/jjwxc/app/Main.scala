@@ -50,12 +50,12 @@ object Main extends IOApp {
     }
   }
 
-  private def parseCommands(args: List[String]): String = {
+  private def parseCommands(args: List[String]): Option[String] = {
     val commandsRegex = "--(\\w+)".r
 
     args.flatMap { arg =>
       commandsRegex.findFirstMatchIn(arg).map(_.group(1))
-    }.head
+    }.headOption
   }
 
   def loadConfig: IO[ApplicationConfig] = {

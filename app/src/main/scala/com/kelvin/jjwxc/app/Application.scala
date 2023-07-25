@@ -14,7 +14,7 @@ import org.typelevel.log4cats.Logger
 import java.io.File
 
 object Application {
-  def run(searchTerms: List[SearchTerm], config: ApplicationConfig, command: String)(
+  def run(searchTerms: List[SearchTerm], config: ApplicationConfig, command: Option[String])(
       implicit logger: Logger[IO]
   ): IO[ExitCode] = {
 
@@ -32,20 +32,20 @@ object Application {
       searchUrlService           <- SearchUrlGenererator.resource(config.jjwxcConfig.hostUrl, config.jjwxcConfig.urlEncoding)
       searchChromeRequestService <- SearchTermRequester(driverWithToken.driver)
       indexedPostCacheStream     <- Resource.Eval(IO(IndexedPostCachingStream(cacheDir)))
-      threadCount                = 1 //Runtime.getRuntime.availableProcessors
-      chromePool                 <- DriverInstancePool(threadCount, hostUrl, workingDir)
+      threadCount                = math.min(Runtime.getRuntime.availableProcessors, 2)
+      driverPool                 <- DriverInstancePool(threadCount, hostUrl, workingDir)
       cachedPosts                <- Resource.eval(IO(loadCachedPosts(cacheDir)))
       sink                       <- Resource.eval(IO(new SinkStream(cachePath = cacheDir, outputPath = sinkDir)))
-
+      commands                   = command.flatMap(toCommands)
       orchestrationService <- OrchestrationService.resource(
                                searchUrlService,
                                searchChromeRequestService,
-                               chromePool,
+                               driverPool,
                                indexedPostCacheStream,
                                cachedPosts,
                                sink,
                                threadCount,
-                               toCommands(command)
+                               commands
                              )
     } yield orchestrationService
 

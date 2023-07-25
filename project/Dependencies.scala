@@ -49,6 +49,10 @@ object Dependencies {
     val `pure-config` = "com.github.pureconfig" %% "pureconfig" % "0.17.1"
   }
 
+  object Resilience4j {
+    val `resilience4j` = "io.github.resilience4j" % "resilience4j-all" % "2.0.2"
+  }
+
   lazy val `fs2-File` = Seq(
     libraryDependencies ++= List(
       Circe.`circe-fs2`,

@@ -8,6 +8,7 @@ import org.openqa.selenium.{By, WebElement}
 import java.net.URL
 import java.util.UUID
 import scala.jdk.CollectionConverters._
+import scala.util.matching.Regex
 
 object PostParserService {
   def processPost(driver: RemoteWebDriver, postUrl: URL): IndexedPost = {
@@ -70,21 +71,13 @@ object PostParserService {
   }
 
   private def extractUserAndDate(element: WebElement): (String, String) = {
-    val taggedElements = element
-      .findElements(By.xpath(".//*"))
-      .asScala
-      .filter(it => it.getTagName == "font" || it.getTagName == "span")
-      .map(_.getText)
+    val text                   = element.getText
+    val datePattern: Regex     = raw"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}".r
+    val usernamePattern: Regex = raw"[^\s]*\|".r
 
-    val text = element.getText
+    val date     = datePattern.findFirstIn(text).getOrElse("UNKNOWN")
+    val username = usernamePattern.findFirstIn(text).getOrElse("UNKNOWN")
 
-    val userAndDate = taggedElements
-      .fold(text)((currentText, taggedElem) => currentText.replace(taggedElem, ""))
-      .replace("留言", "")
-      .replace("\n", "")
-      .split('|')
-      .map(_.strip())
-
-    (userAndDate.head, userAndDate.last)
+    (username, date)
   }
 }

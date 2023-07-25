@@ -28,9 +28,11 @@ class DriverInstancePool(queue: Queue[IO, RemoteWebDriver])(implicit logger: Log
   private def logError(err: Throwable, details: RetryDetails): IO[Unit] = {
     details match {
       case GivingUp(totalRetries, totalDelay) =>
-        logger.error(err)(s"Giving on request after $totalRetries retries and $totalDelay")
+        logger.error(err)(
+          s"Giving up on request after $totalRetries retries and $totalDelay. [Error=${err.getMessage}]"
+        )
       case WillDelayAndRetry(nextDelay, retriesSoFar, cumulativeDelay) =>
-        logger.warn(s"Failed to handle request. So far we have retried $retriesSoFar.")
+        logger.warn(err)(s"Failed to handle request. So far we have retried $retriesSoFar.")
     }
   }
 }
